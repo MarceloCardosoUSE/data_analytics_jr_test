@@ -1,0 +1,9 @@
+Arquivo;Status;Colunas faltantes;Colunas em excesso-nomes diferentes
+educandos_2016.csv;incorreto;SETOR;SERIEV | MODALID | SETEDU
+educandos_2017.csv;incorreto;SETOR;SERIEV | MODALID | SETEDU
+educandos_2018.csv;incorreto;QTDE | DRE | CODESC;CODES | Ï»¿DRE | QTD
+educandos_2019.csv;incorreto;QTDE | CODESC;CODES | QTD
+educandos_2020.csv;correto;;
+educandos_2021.csv;correto;;
+educandos_2022.csv;correto;;
+educandos_2023.csv;incorreto;RACA;
