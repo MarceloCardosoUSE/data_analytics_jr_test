@@ -26,7 +26,7 @@ def comparar_cabecalhos(df):
             - set: Conjunto de colunas faltantes.
             - set: Conjunto de colunas em excessonomes diferentes.
     """
-    cabecalho_correto = "DRE;CODESC;TIPOESC;NOMESC;DISTRITO;SETOR;ANO;REDE;MODAL;DESCSERIE;PERIODO;TURNO;DESCTURNO;SEXO;IDADE;NEE;RACA;QTDE;DATABASE"
+    cabecalho_correto = "DRE;CODESC;TIPOESC;NOMESC;NOMESCOF;CEU;DIRETORIA;SUBPREF;ENDERECO;NUMERO;BAIRRO;CEP;TEL1;TEL2;FAX;SITUACAO;CODDIST;DISTRITO;SETOR;CODINEP;CODCIE;EH;FX_ETARIA;DT_CRIACAO;ATO_CRIACAO;DOM_CRIACAO;DT_INI_FUNC;DT_INI_CONV;DT_AUTORIZA;DT_EXTINCAO;NOME_ANT;REDE;LATITUDE;LONGITUDE;DATABASE"
     
     # Converter nomes das colunas para maiúsculas
     df.columns = [col.upper() for col in df.columns]
@@ -47,7 +47,7 @@ def main():
 
     Salva os resultados em um arquivo CSV chamado 'resultado_comparacao_cabecalhos.csv'.
     """
-    diretorio = 'datasets/educandos'
+    diretorio = 'datasets/escolas/'
     df_comparacao = pd.DataFrame(columns=["Arquivo", "Status", "Colunas faltantes", "Colunas em excesso-nomes diferentes"])
 
     for arquivo in os.listdir(diretorio):
@@ -66,7 +66,7 @@ def main():
                 "Colunas em excesso-nomes diferentes": [" | ".join(colunas_em_excesso)]
             })], ignore_index=True)
 
-    df_comparacao.to_csv('datasets/educandos/resultado_comparacao_cabecalhos_educandos.csv', sep=";", index=False)
+    df_comparacao.to_csv('datasets/escolas/resultado_comparacao_cabecalhos_escolas.csv', sep=";", index=False)
 
 if __name__ == "__main__":
     main()
