@@ -2,15 +2,16 @@ import os
 import pandas as pd
 
 # Definindo a função comparador_cabecalhos_csv
-def comparador_cabecalhos_csv(diretorio, cabecalho_correto, delimitador, encoding):
+def comparador_cabecalhos_csv(diretorio_entrada, diretorio_saida, cabecalho_correto, delimitador=';', encoding='latin-1'):
     """
     Esta função processa arquivos CSV em um diretório especificado, verifica se o cabeçalho de cada arquivo corresponde ao cabeçalho correto fornecido e gera um relatório de comparação.
 
     Parâmetros:
-    diretorio (str): O caminho para o diretório que contém os arquivos CSV.
+    diretorio_entrada (str): O caminho para o diretório que contém os arquivos CSV.
+    diretorio_saida (str): O caminho para o diretório onde o relatório de comparação será salvo.
     cabecalho_correto (str): Uma string delimitada por ponto e vírgula do cabeçalho correto.
-    delimitador (str): O delimitador usado nos arquivos CSV.
-    encoding (str): A codificação usada nos arquivos CSV.
+    delimitador (str, opcional): Delimitador usado nos arquivos. Padrão é ';'.
+    encoding (str, opcional): Codificação usada nos arquivos. Padrão é 'latin-1'.
 
     Retorna:
     None. A função salva um arquivo CSV com o relatório de comparação no diretório especificado.
@@ -19,11 +20,11 @@ def comparador_cabecalhos_csv(diretorio, cabecalho_correto, delimitador, encodin
     df_comparacao = pd.DataFrame(columns=["Arquivo", "Status", "Colunas faltantes", "Colunas em excesso-nomes diferentes"])
     
     # Iterando sobre todos os arquivos no diretório especificado
-    for arquivo in os.listdir(diretorio):
+    for arquivo in os.listdir(diretorio_entrada):
         # Verificando se o arquivo é um arquivo .csv
         if arquivo.endswith(".csv"):
             # Construindo o caminho completo para o arquivo
-            caminho_arquivo = os.path.join(diretorio, arquivo)
+            caminho_arquivo = os.path.join(diretorio_entrada, arquivo)
             
             # Lendo o arquivo .csv para um DataFrame
             df = pd.read_csv(caminho_arquivo, delimiter=delimitador, encoding=encoding)
@@ -50,8 +51,9 @@ def comparador_cabecalhos_csv(diretorio, cabecalho_correto, delimitador, encodin
             })], ignore_index=True)
     
     # Salvando o DataFrame de comparação como um arquivo .csv
-    df_comparacao.to_csv(os.path.join(diretorio, 'resultado_comparacao_cabecalhos_escolas.csv'), sep=";", index=False)
+    df_comparacao.to_csv(os.path.join(diretorio_saida, 'resultado_comparacao_cabecalhos_escolas.csv'), sep=";", index=False)
+
 
 # Uso da função:
 cabecalho_correto = "DRE;CODESC;TIPOESC;NOMESC;NOMESCOF;CEU;DIRETORIA;SUBPREF;ENDERECO;NUMERO;BAIRRO;CEP;TEL1;TEL2;FAX;SITUACAO;CODDIST;DISTRITO;SETOR;CODINEP;CODCIE;EH;FX_ETARIA;DT_CRIACAO;ATO_CRIACAO;DOM_CRIACAO;DT_INI_FUNC;DT_INI_CONV;DT_AUTORIZA;DT_EXTINCAO;NOME_ANT;REDE;LATITUDE;LONGITUDE;DATABASE"
-comparador_cabecalhos_csv('datasets_originais\\escolas', cabecalho_correto, ";", 'latin-1')
+comparador_cabecalhos_csv('datasets_originais\\escolas', 'datasets_originais\\escolas', cabecalho_correto)

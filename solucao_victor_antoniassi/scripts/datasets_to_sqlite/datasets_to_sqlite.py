@@ -1,21 +1,30 @@
+import os
 import pandas as pd
 from unidecode import unidecode
 
-def remove_caracteres_especiais(arquivos_csv, delimitador=',', encoding='latin-1'):
+def remove_caracteres_especiais(diretorio_entrada, diretorio_saida, delimitador='\t', encoding='latin-1'):
     """
-    Função para ler um ou mais arquivos CSV, remover caracteres especiais e acentos dos valores das colunas,
-    e salvar os dados novamente em arquivos TSV.
+    Função para ler todos os arquivos CSV e TSV em um diretório, remover caracteres
+    especiais e acentos dos valores das colunas, e salvar os dados novamente em arquivos TSV.
 
     Parâmetros:
-    arquivos_csv (list): Lista de arquivos CSV para processar.
-    delimitador (str, opcional): Delimitador usado nos arquivos CSV. Padrão é ','.
-    encoding (str, opcional): Codificação usada nos arquivos CSV. Padrão é 'latin-1'.
+    diretorio_entrada (str): O caminho para o diretório que contém os arquivos CSV e TSV.
+    diretorio_saida (str): O caminho para o diretório onde os arquivos TSV serão salvos.
+    delimitador (str, opcional): Delimitador usado nos arquivos. Padrão é um '\t'.
+    encoding (str, opcional): Codificação usada nos arquivos. Padrão é 'latin-1'.
 
     Retorna:
     None
     """
-    for arquivo_csv in arquivos_csv:
-        df = pd.read_csv(arquivo_csv, delimiter=delimitador, encoding=encoding)  # Lê o arquivo CSV
-        df = df.applymap(lambda x: unidecode(str(x)) if isinstance(x, str) else x)  # Remove acentos
-        nome_arquivo_tsv = arquivo_csv.replace('.csv', '.tsv')  # Cria o nome do arquivo TSV
-        df.to_csv(nome_arquivo_tsv, sep='\t', index=False, encoding=encoding)  # Salva como TSV
+    for arquivo in os.listdir(diretorio_entrada):
+        if arquivo.endswith('.csv') or arquivo.endswith('.tsv'):
+            caminho_arquivo = os.path.join(diretorio_entrada, arquivo)
+            df = pd.read_csv(caminho_arquivo, delimiter=delimitador, encoding=encoding)
+            df = df.apply(lambda x: x.map(lambda y: unidecode(str(y)) if isinstance(y, str) else y))
+            nome_arquivo_tsv = os.path.join(diretorio_saida, arquivo.rsplit('.', 1)[0] + '.tsv')
+            df.to_csv(nome_arquivo_tsv, sep='\t', index=False, encoding=encoding)
+
+
+# Uso da função remove_caracteres_especiais:
+
+remove_caracteres_especiais('datasets_tratados\\escolas\\tratados_google_sheets', 'datasets_tratados\\escolas\\tratados_python')
