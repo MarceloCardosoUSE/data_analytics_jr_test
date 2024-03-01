@@ -25,8 +25,11 @@ def remove_caracteres_especiais(diretorio_entrada, diretorio_saida, delimitador=
             # Lê o arquivo em um DataFrame
             df = pd.read_csv(caminho_arquivo, delimiter=delimitador, encoding=encoding)
             # Remove acentos de cada valor de string no DataFrame
-            df = df.apply(lambda x: x.map(lambda y: unidecode(str(y)) if isinstance(y, str) else y))
+            df = df.apply(lambda x: x.map(lambda y: unidecode(y) if isinstance(y, str) else y))
             # Define o nome do arquivo de saída
             nome_arquivo_tsv = os.path.join(diretorio_saida, arquivo.rsplit('.', 1)[0] + '.tsv')
             # Salva o DataFrame no arquivo de saída
             df.to_csv(nome_arquivo_tsv, sep='\t', index=False, encoding=encoding)
+
+
+remove_caracteres_especiais('datasets_tratados\\escolas\\tratados_google_sheets', 'datasets_tratados\\escolas\\tratados_python')
