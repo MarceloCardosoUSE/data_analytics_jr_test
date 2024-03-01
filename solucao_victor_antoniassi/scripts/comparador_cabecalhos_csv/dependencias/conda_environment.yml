@@ -1,0 +1,6 @@
+name: comparador_cabecalhos_csv
+channels:
+  - defaults
+dependencies:
+  - python
+  - conda-forge::pandas
