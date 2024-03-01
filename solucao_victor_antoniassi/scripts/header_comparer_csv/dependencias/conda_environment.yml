@@ -1,4 +1,4 @@
-name: comparador_cabecalhos_csv
+name: header_comparer_csv
 channels:
   - defaults
 dependencies:

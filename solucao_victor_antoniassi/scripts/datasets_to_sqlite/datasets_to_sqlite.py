@@ -2,31 +2,31 @@ import os
 import pandas as pd
 from unidecode import unidecode
 
-def remove_caracteres_especiais(diretorio_entrada, diretorio_saida, delimitador='\t', encoding='latin-1'):
+def remove_special_characters(input_directory, output_directory, delimiter='\t', encoding='latin-1'):
     """
-    Remove caracteres especiais e acentos dos valores das colunas de todos os arquivos CSV e TSV em um diretório,
-    e salva os dados novamente em arquivos TSV.
+    Removes special characters and accents from the column values of all CSV and TSV files in a directory,
+    and saves the data back into TSV files.
 
     Args:
-        diretorio_entrada (str): Caminho para o diretório com os arquivos CSV e TSV.
-        diretorio_saida (str): Caminho para o diretório onde os arquivos TSV serão salvos.
-        delimitador (str, opcional): Delimitador usado nos arquivos. Padrão é '\t'.
-        encoding (str, opcional): Codificação usada nos arquivos. Padrão é 'latin-1'.
+        input_directory (str): Path to the directory with the CSV and TSV files.
+        output_directory (str): Path to the directory where the TSV files will be saved.
+        delimiter (str, optional): Delimiter used in the files. Default is '\t'.
+        encoding (str, optional): Encoding used in the files. Default is 'latin-1'.
 
     Returns:
         None
     """
-    # Itera sobre os arquivos no diretório de entrada
-    for arquivo in os.listdir(diretorio_entrada):
-        # Processa apenas arquivos CSV e TSV
-        if arquivo.endswith('.csv') or arquivo.endswith('.tsv'):
-            # Obtém o caminho completo do arquivo
-            caminho_arquivo = os.path.join(diretorio_entrada, arquivo)
-            # Lê o arquivo em um DataFrame
-            df = pd.read_csv(caminho_arquivo, delimiter=delimitador, encoding=encoding)
-            # Remove acentos de cada valor de string no DataFrame
+    # Iterates over the files in the input directory
+    for file in os.listdir(input_directory):
+        # Processes only CSV and TSV files
+        if file.endswith('.csv') or file.endswith('.tsv'):
+            # Gets the full path of the file
+            file_path = os.path.join(input_directory, file)
+            # Reads the file into a DataFrame
+            df = pd.read_csv(file_path, delimiter=delimiter, encoding=encoding)
+            # Removes accents from each string value in the DataFrame
             df = df.apply(lambda x: x.map(lambda y: unidecode(y) if isinstance(y, str) else y))
-            # Define o nome do arquivo de saída
-            nome_arquivo_tsv = os.path.join(diretorio_saida, arquivo.rsplit('.', 1)[0] + '.tsv')
-            # Salva o DataFrame no arquivo de saída
-            df.to_csv(nome_arquivo_tsv, sep='\t', index=False, encoding=encoding)
+            # Defines the name of the output file
+            tsv_file_name = os.path.join(output_directory, file.rsplit('.', 1)[0] + '.tsv')
+            # Saves the DataFrame to the output file
+            df.to_csv(tsv_file_name, sep='\t', index=False, encoding=encoding)
