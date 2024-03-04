@@ -1,6 +1,7 @@
 import os
 import pandas as pd
 from unidecode import unidecode
+import sqlite3
 
 def remove_special_characters(input_directory, output_directory, delimiter='\t', encoding='latin-1'):
     """
@@ -30,10 +31,7 @@ def remove_special_characters(input_directory, output_directory, delimiter='\t',
             tsv_file_name = os.path.join(output_directory, file.rsplit('.', 1)[0] + '.tsv')
             # Saves the DataFrame to the output file
             df.to_csv(tsv_file_name, sep='\t', index=False, encoding=encoding)
-
-
-import sqlite3
-
+            
 
 def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key):
     """
