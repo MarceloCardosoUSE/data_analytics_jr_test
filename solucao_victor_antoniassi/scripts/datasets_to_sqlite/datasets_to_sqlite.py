@@ -5,10 +5,10 @@ import sqlite3
 
 def remove_special_characters(input_directory, output_directory, delimiter='\t', encoding='latin-1'):
     """
-    Removes special characters and accents from the column values of all CSV and TSV files in a directory,
-    and saves the data back into TSV files.
+    Remove special characters and accents from the column values of all CSV and TSV files in a directory,
+    and save the data back into TSV files.
 
-    Args:
+    Parameters:
         input_directory (str): Path to the directory with the CSV and TSV files.
         output_directory (str): Path to the directory where the TSV files will be saved.
         delimiter (str, optional): Delimiter used in the files. Default is '\t'.
@@ -17,41 +17,47 @@ def remove_special_characters(input_directory, output_directory, delimiter='\t',
     Returns:
         None
     """
-    # Iterates over the files in the input directory
+    # Iterate over the files in the input directory
     for file in os.listdir(input_directory):
-        # Processes only CSV and TSV files
+        # Process only CSV and TSV files
         if file.endswith('.csv') or file.endswith('.tsv'):
-            # Gets the full path of the file
+            # Get the full path of the file
             file_path = os.path.join(input_directory, file)
-            # Reads the file into a DataFrame
+            # Read the file into a DataFrame
             df = pd.read_csv(file_path, delimiter=delimiter, encoding=encoding)
-            # Removes accents from each string value in the DataFrame
+            # Remove accents from each string value in the DataFrame
             df = df.apply(lambda x: x.map(lambda y: unidecode(y) if isinstance(y, str) else y))
-            # Defines the name of the output file
+            # Define the name of the output file
             tsv_file_name = os.path.join(output_directory, file.rsplit('.', 1)[0] + '.tsv')
-            # Saves the DataFrame to the output file
+            # Save the DataFrame to the output file
             df.to_csv(tsv_file_name, sep='\t', index=False, encoding=encoding)
-            
 
-def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key):
+
+def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
     """
     Load TSV files from a directory into a SQLite database.
-    
-    Args:
+
+    Parameters:
         tsv_dir (str): The directory where the TSV files are located.
         db_name (str): The name of the SQLite database.
-        table_name (str): The name of the table in the SQLite database where the data will be inserted.
-        primary_key (str): The name of the column to be set as the primary key in the table.
+        table_name (str): The name of the table in the SQLite database where
+                          the data will be inserted.
+        primary_key (str, optional): The name of the column to be set as the primary key
+                           in the table. If not provided, an artificial primary
+                           key called 'ID' will be created.
 
     Returns:
         None
     """
-
     # Create a connection to the SQLite database
     conn = sqlite3.connect(db_name)
 
     # Create a cursor object
     cur = conn.cursor()
+
+    # If no primary_key is provided, create an artificial one called 'ID'
+    if primary_key is None:
+        primary_key = 'ID'
 
     # Create the table with the specified column as the primary key
     cur.execute(f"""
@@ -71,8 +77,12 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key):
         # Read the TSV file into a DataFrame
         df = pd.read_csv(os.path.join(tsv_dir, tsv_file), sep='\t')
 
+        # If no primary_key was provided, create an artificial one
+        if 'ID' not in df.columns:
+            df.insert(0, 'ID', range(1, len(df) + 1))
+
         # Write the DataFrame to the SQLite database
-        df.to_sql(table_name, conn, if_exists='append', index=False)
+        df.to_sql(table_name, conn, if_exists='replace', index=False)
 
     # Print the first 10 records of the table
     df = pd.read_sql_query(f"SELECT * FROM {table_name} LIMIT 10", conn)
