@@ -1,10 +1,11 @@
-import os
 import pandas as pd
+import os
 from unidecode import unidecode
+import chardet
 import sqlite3
 
 
-def remove_special_characters(input_directory, output_directory, delimiter='\t', encoding='latin-1'):
+def remove_special_characters(input_directory, output_directory, original_delimiter=None):
     """
     Remove special characters and accents from the column values of all CSV and TSV files in a directory,
     and save the data back into TSV files.
@@ -12,8 +13,7 @@ def remove_special_characters(input_directory, output_directory, delimiter='\t',
     Parameters:
         input_directory (str): Path to the directory with the CSV and TSV files.
         output_directory (str): Path to the directory where the TSV files will be saved.
-        delimiter (str, optional): Delimiter used in the files. Default is '\t'.
-        encoding (str, optional): Encoding used in the files. Default is 'latin-1'.
+        original_delimiter (str, optional): Original delimiter used in the files. If None, the delimiter will be inferred.
 
     Returns:
         None
@@ -26,17 +26,41 @@ def remove_special_characters(input_directory, output_directory, delimiter='\t',
             # Get the full path of the file
             file_path = os.path.join(input_directory, file)
             
-            # Read the file into a DataFrame
-            df = pd.read_csv(file_path, delimiter=delimiter, encoding=encoding)
+            # Detect the file encoding
+            with open(file_path, 'rb') as f:
+                result = chardet.detect(f.read(10000))  # Read only the first 10000 bytes
+            encoding = result['encoding']
             
-            # Remove accents from each string value in the DataFrame
-            df = df.apply(lambda x: x.map(lambda y: unidecode(y) if isinstance(y, str) else y))
+            # If original_delimiter is not provided, try to infer the delimiter
+            if original_delimiter is None:
+                with open(file_path, 'r', encoding=encoding) as f:
+                    first_line = f.readline()
+                if '\t' in first_line:
+                    delimiter = '\t'
+                elif ',' in first_line:
+                    delimiter = ','
+                elif ';' in first_line:
+                    delimiter = ';'
+                else:
+                    raise ValueError("Delimiter not recognized. Please provide the original delimiter.")
+            else:
+                delimiter = original_delimiter
             
             # Define the name of the output file
             tsv_file_name = os.path.join(output_directory, file.rsplit('.', 1)[0] + '.tsv')
             
-            # Save the DataFrame to the output file
-            df.to_csv(tsv_file_name, sep='\t', index=False, encoding=encoding)
+            # Process the file in chunks
+            chunksize = 10 ** 6  # Adjust this value depending on your available memory
+            for chunk in pd.read_csv(file_path, delimiter=delimiter, encoding=encoding, chunksize=chunksize):
+                # Remove accents from each string value in the chunk
+                chunk = chunk.apply(lambda x: x.map(lambda y: unidecode(y) if isinstance(y, str) else y))
+                
+                # Save the chunk to the output file
+                chunk.to_csv(tsv_file_name, sep='\t', index=False, encoding='utf-8', mode='a')
+
+# Usage of the function:
+remove_special_characters(input_directory='data_preparation\\datasets_tratados\\educandos\\tratados_google_sheets', 
+output_directory='data_preparation\\datasets_tratados\\educandos\\tratados_python', original_delimiter=';')
 
 
 def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
