@@ -63,35 +63,37 @@ def remove_special_characters(input_directory, output_directory, original_delimi
 
 
 # Usage of the function:
-#remove_special_characters(input_directory='data_preparation\\datasets_tratados\\educandos\\tratados_google_sheets', 
-#output_directory='data_preparation\\datasets_tratados\\educandos\\tratados_python', original_delimiter=';')
+# remove_special_characters(input_directory='data_preparation\\datasets_tratados\\educandos\\tratados_google_sheets', 
+# output_directory='data_preparation\\datasets_tratados\\educandos\\tratados_unidecode', original_delimiter=';')
+
+
+import pandas as pd
+import os
+import sqlite3
 
 
 def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
     """
-    Load TSV files from a directory into a SQLite database.
+    Load TSV files into an SQLite table.
 
-    Parameters:
-        tsv_dir (str): The directory where the TSV files are located.
-        db_name (str): The name of the SQLite database.
-        table_name (str): The name of the table in the SQLite database where
-                          the data will be inserted.
-        primary_key (str, optional): The name of the column to be set as the primary key
-                           in the table. If not provided, an artificial primary
-                           key called 'ID_EDUCANDOS' will be created.
+    Args:
+        tsv_dir (str): Directory containing the TSV files.
+        db_name (str): Name of the SQLite database file.
+        table_name (str): Name of the table where the data will be loaded.
+        primary_key (str, optional): Name of the primary key column. If not provided, an artificial one called 'ID_EDUCANDOS' will be created.
 
     Returns:
         None
     """
-    # Create a connection to the SQLite database
+    # Check if the table already exists in the database
     conn = sqlite3.connect(db_name)
-
-    # Create a cursor object
     cur = conn.cursor()
+    cur.execute(f"SELECT name FROM sqlite_master WHERE type='table' AND name='{table_name}'")
+    table_exists = cur.fetchone()
 
-    # If no primary_key is provided, create an artificial one called 'ID_EDUCANDOS'
-    if primary_key is None:
-        primary_key = 'ID_EDUCANDOS'
+    # Clear the table before loading the files
+    if not table_exists:
+        cur.execute(f"DROP TABLE IF EXISTS {table_name}")
 
     # Get all files in the specified directory
     files = os.listdir(tsv_dir)
@@ -109,23 +111,13 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
             df.insert(0, 'ID_EDUCANDOS', range(1, len(df) + 1))
 
         # Write the DataFrame to the SQLite database
-        df.to_sql(table_name, conn, if_exists='replace', index=False)
-
-    # Print the first 10 records of the table
-    df = pd.read_sql_query(f"SELECT * FROM {table_name} LIMIT 10", conn)
-    print(df)
-
-    # Print the schema of the table
-    cur.execute(f"PRAGMA table_info({table_name})")
-    rows = cur.fetchall()
-    for row in rows:
-        print(row)
+        df.to_sql(table_name, conn, if_exists='append', index=False)
 
     # Close the connection to the SQLite database
     conn.close()
 
 # Usage of the function:
-#load_tsv_to_sqlite('data_preparation\\datasets_tratados\\educandos\\tratados_python', 'escolas_educandos_sqlite.db', 'educandos')
+load_tsv_to_sqlite('data_preparation\\datasets_tratados\\educandos\\tratados_unidecode', 'escolas_educandos_sqlite.db', 'educandos')
 
 
 def create_escolas_educandos_table():
