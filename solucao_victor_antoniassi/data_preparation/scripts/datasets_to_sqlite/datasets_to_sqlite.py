@@ -67,11 +67,6 @@ def remove_special_characters(input_directory, output_directory, original_delimi
 # output_directory='data_preparation\\datasets_tratados\\educandos\\tratados_unidecode', original_delimiter=';')
 
 
-import pandas as pd
-import os
-import sqlite3
-
-
 def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
     """
     Load TSV files into an SQLite table.
@@ -80,7 +75,7 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
         tsv_dir (str): Directory containing the TSV files.
         db_name (str): Name of the SQLite database file.
         table_name (str): Name of the table where the data will be loaded.
-        primary_key (str, optional): Name of the primary key column. If not provided, an artificial one called 'ID_EDUCANDOS' will be created.
+        primary_key (str, optional): Name of the primary key column. If not provided, an artificial primary key called 'PK_EDUCANDOS' will be created.
 
     Returns:
         None
@@ -106,9 +101,12 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
         # Read the TSV file into a DataFrame
         df = pd.read_csv(os.path.join(tsv_dir, tsv_file), sep='\t', encoding='utf-8')
 
+        # Create the artificial key 'SK_CODESC_ANO'
+        df['SK_CODESC_ANO'] = df['CODESC'].astype(str) + tsv_file[-8:-4]
+
         # If no primary_key was provided, create an artificial one
-        if primary_key == 'ID_EDUCANDOS' and primary_key not in df.columns:
-            df.insert(0, 'ID_EDUCANDOS', range(1, len(df) + 1))
+        if primary_key == 'PK_EDUCANDOS' and primary_key not in df.columns:
+            df.insert(0, 'PK_EDUCANDOS', range(1, len(df) + 1))
 
         # Write the DataFrame to the SQLite database
         df.to_sql(table_name, conn, if_exists='append', index=False)
@@ -117,15 +115,20 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
     conn.close()
 
 # Usage of the function:
-load_tsv_to_sqlite('data_preparation\\datasets_tratados\\educandos\\tratados_unidecode', 'escolas_educandos_sqlite.db', 'educandos')
+# load_tsv_to_sqlite('data_preparation\\datasets_tratados\\educandos\\tratados_unidecode', 'escolas_educandos_sqlite.db', 'educandos')
 
+
+
+import pandas as pd
+import os
+import sqlite3
 
 def create_escolas_educandos_table():
     """
     This function creates a new table named 'escolas_educandos' in a SQLite database.
     The new table is based on two existing tables: 'escolas' and 'educandos'.
     The function keeps only one column for each name, except for the columns called DATABASE, which are differentiated by aliases.
-    The common key between the tables is CODESC.
+    The common key between the tables is SK_CODESC_ANO.
 
     Returns:
     None
@@ -174,7 +177,7 @@ def create_escolas_educandos_table():
         {', '.join(columns_sql)}
     FROM escolas esc
     JOIN educandos educ
-    ON esc.CODESC = educ.CODESC;
+    ON esc.SK_CODESC_ANO = educ.SK_CODESC_ANO;
     """
 
     # Execute the SQL command
@@ -185,4 +188,4 @@ def create_escolas_educandos_table():
     conn.close()
 
 # Usage of the function:
-# create_escolas_educandos_table()
+create_escolas_educandos_table()
