@@ -59,8 +59,8 @@ def remove_special_characters(input_directory, output_directory, original_delimi
                 chunk.to_csv(tsv_file_name, sep='\t', index=False, encoding='utf-8', mode='a')
 
 # Usage of the function:
-remove_special_characters(input_directory='data_preparation\\datasets_tratados\\educandos\\tratados_google_sheets', 
-output_directory='data_preparation\\datasets_tratados\\educandos\\tratados_python', original_delimiter=';')
+#remove_special_characters(input_directory='data_preparation\\datasets_tratados\\educandos\\tratados_google_sheets', 
+#output_directory='data_preparation\\datasets_tratados\\educandos\\tratados_python', original_delimiter=';')
 
 
 def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
@@ -121,7 +121,7 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
     conn.close()
 
 # Usage of the function:
-# load_tsv_to_sqlite('datasets_tratados\\educandos\\tratados_python', 'escolas_educandos_sqlite.db', 'educandos')
+#load_tsv_to_sqlite('data_preparation\\datasets_tratados\\educandos\\tratados_python', 'escolas_educandos_sqlite.db', 'educandos')
 
 
 def create_escolas_educandos_table():
@@ -136,7 +136,7 @@ def create_escolas_educandos_table():
     """
 
     # Connect to the SQLite database 'escolas_educandos_sqlite.db'
-    conn = sqlite3.connect('escolas_educandos_sqlite.db')
+    conn = sqlite3.connect('sqlite_database\\escolas_educandos_sqlite.db')
 
     # Create a cursor object to execute SQL commands
     cur = conn.cursor()
@@ -189,4 +189,4 @@ def create_escolas_educandos_table():
     conn.close()
 
 # Usage of the function:
-# create_escolas_educandos_table()
+#create_escolas_educandos_table()
