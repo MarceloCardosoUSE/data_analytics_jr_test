@@ -55,8 +55,12 @@ def remove_special_characters(input_directory, output_directory, original_delimi
                 # Remove accents from each string value in the chunk
                 chunk = chunk.apply(lambda x: x.map(lambda y: unidecode(y) if isinstance(y, str) else y))
                 
+                # Remove non-UTF-8 characters
+                chunk = chunk.apply(lambda x: x.map(lambda y: y.encode('utf-8', 'ignore').decode('utf-8') if isinstance(y, str) else y))
+                
                 # Save the chunk to the output file
                 chunk.to_csv(tsv_file_name, sep='\t', index=False, encoding='utf-8', mode='a')
+
 
 # Usage of the function:
 #remove_special_characters(input_directory='data_preparation\\datasets_tratados\\educandos\\tratados_google_sheets', 
@@ -98,7 +102,7 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
     # Iterate over each TSV file
     for tsv_file in tsv_files:
         # Read the TSV file into a DataFrame
-        df = pd.read_csv(os.path.join(tsv_dir, tsv_file), sep='\t')
+        df = pd.read_csv(os.path.join(tsv_dir, tsv_file), sep='\t', encoding='utf-8')
 
         # If no primary_key was provided, create an artificial one
         if primary_key == 'ID_EDUCANDOS' and primary_key not in df.columns:
@@ -136,7 +140,7 @@ def create_escolas_educandos_table():
     """
 
     # Connect to the SQLite database 'escolas_educandos_sqlite.db'
-    conn = sqlite3.connect('sqlite_database\\escolas_educandos_sqlite.db')
+    conn = sqlite3.connect('escolas_educandos_sqlite.db')
 
     # Create a cursor object to execute SQL commands
     cur = conn.cursor()
@@ -189,4 +193,4 @@ def create_escolas_educandos_table():
     conn.close()
 
 # Usage of the function:
-#create_escolas_educandos_table()
+# create_escolas_educandos_table()
