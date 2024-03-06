@@ -1,0 +1,10 @@
+File	Status	Missing Columns	Columns not present in the correct header
+cabecalho_padrao_escolas.csv	correct		
+escolas_2016.csv	incorrect	DRE --- DT_EXTINCAO --- DT_INI_CONV --- FX_ETARIA --- NOMESCOF	DTURNOS12 --- DTURNOS07 --- T2D3D10 --- DTURNOS13 --- T2D3D07 --- DTURNOS14 --- DTURNOS10 --- T2D3D15 --- T2D3D11 --- DTURNOS --- T2D3D08 --- DTURNOS08 --- T2D3D09 --- T2D3D13 --- DTURNOS11 --- Ï»¿DRE --- T2D3D14 --- T2D3D12 --- DTURNOS09 --- T2D3D --- DTURNOS15
+escolas_2017.csv	incorrect	FX_ETARIA --- NOMESCOF --- DT_EXTINCAO --- DT_INI_CONV	DTURNOS12 --- DTURNOS07 --- DTURNOS16 --- T2D3D10 --- DTURNOS13 --- T2D3D07 --- DTURNOS14 --- DTURNOS10 --- T2D3D15 --- T2D3D11 --- DTURNOS --- T2D3D08 --- T2D3D16 --- DTURNOS08 --- T2D3D09 --- T2D3D13 --- DTURNOS11 --- T2D3D14 --- T2D3D12 --- DTURNOS09 --- T2D3D --- DTURNOS15
+escolas_2018.csv	incorrect	DRE --- DT_EXTINCAO --- CODCIE --- DOM_CRIACAO --- NOMESCOF	DT_EXTINTAO --- Ï»¿DRE --- DOC_CRIACAO --- CD_CIE
+escolas_2019.csv	incorrect	CODCIE --- DRE --- DT_EXTINCAO --- NOMESCOF	DT_EXTINTAO --- Ï»¿DRE --- CD_CIE
+escolas_2020.csv	incorrect	DT_INI_FUNC --- NOMESCOF --- CODCIE	NOMESCOFI --- CD_CIE
+escolas_2021.csv	incorrect	DT_INI_FUNC --- NOMESCOF --- CODCIE --- NOMESC	NOMES --- NOMESCOFI --- CD_CIE
+escolas_2022.csv	incorrect	DT_INI_FUNC --- NOMESCOF --- CODCIE --- NOMESC	NOMES --- NOMESCOFI --- CD_CIE
+escolas_2023.csv	incorrect	REDE --- DT_INI_FUNC --- CODCIE --- CODDIST --- NOMESCOF --- NOMESC	CDIST --- CD_CIE --- NOMES --- FX_ETARIA.1 --- DESLOC
