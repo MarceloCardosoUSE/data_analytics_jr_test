@@ -118,11 +118,6 @@ def load_tsv_to_sqlite(tsv_dir, db_name, table_name, primary_key=None):
 # load_tsv_to_sqlite('data_preparation\\datasets_tratados\\educandos\\tratados_unidecode', 'escolas_educandos_sqlite.db', 'educandos')
 
 
-
-import pandas as pd
-import os
-import sqlite3
-
 def create_escolas_educandos_table():
     """
     This function creates a new table named 'escolas_educandos' in a SQLite database.
@@ -188,4 +183,4 @@ def create_escolas_educandos_table():
     conn.close()
 
 # Usage of the function:
-create_escolas_educandos_table()
+# create_escolas_educandos_table()
