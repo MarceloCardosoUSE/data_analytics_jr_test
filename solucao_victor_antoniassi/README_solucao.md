@@ -19,14 +19,14 @@ Cada registro nos dados dos educandos representa um número de alunos por escola
 ## Etapas da Preparação de Dados
 
 1. Análise inicial da qualidade dos dados e das estruturas dos arquivos .csv utilizando o Google Sheets.
-2. Desenvolvimento de um [script](https://github.com/victorantoniassi/data_analytics_jr_test/tree/66872202f2d515acb954e19ea35592a60b6afbf2/solucao_victor_antoniassi/data_preparation/scripts/compare_delimited_file_headers) em Python para comparar os cabeçalhos dos arquivos (educandos e escolas) com cabeçalhos corretos baseados nos respectivos dicionários de dados.
+2. Desenvolvimento de um [script](data_preparation/scripts/compare_delimited_file_headers) em Python para comparar os cabeçalhos dos arquivos (educandos e escolas) com cabeçalhos corretos baseados nos respectivos dicionários de dados.
 3. Correção manual dos problemas identificados utilizando o Google Sheets (correção nos nomes dos campos, mudança de posições das colunas para posições corretas e exclusão de colunas totalmente vazias ou que não existem no dicionários de dados).
-4. Desenvolvimento de um [script](https://github.com/victorantoniassi/data_analytics_jr_test/tree/66872202f2d515acb954e19ea35592a60b6afbf2/solucao_victor_antoniassi/data_preparation/scripts/datasets_to_sqlite) em Python que aplica algumas etapas de preparação/limpeza nos dados, necessário para os dados serem armazenados de forma correta no banco de dados SQLite.
-5. Desenvolvimento de um [script](https://github.com/victorantoniassi/data_analytics_jr_test/tree/66872202f2d515acb954e19ea35592a60b6afbf2/solucao_victor_antoniassi/data_preparation/scripts/datasets_to_sqlite) em Python que cria o banco de dados SQLite e que faz a ingestão de dados dos arquivos para as tabelas 'educandos' (dados dos perfis de alunos matriculados nos anos de 2021 e 2022), 'escolas' (dados sobre as escolas municipais referente aos anos de 2021 e 2022) e 'escolas_educandos' (tabela que faz a junção das tabelas 'escolas' e 'educandos').
+4. Desenvolvimento de um [script](data_preparation/scripts/datasets_to_sqlite) em Python que aplica algumas etapas de preparação/limpeza nos dados, necessário para os dados serem armazenados de forma correta no banco de dados SQLite.
+5. Desenvolvimento de um [script](data_preparation/scripts/datasets_to_sqlite) em Python que cria o [banco de dados SQLite](sqlite_db) e que faz a ingestão de dados dos arquivos para as tabelas 'educandos' (dados dos perfis de alunos matriculados nos anos de 2021 e 2022), 'escolas' (dados sobre as escolas municipais referente aos anos de 2021 e 2022) e 'escolas_educandos' (tabela que faz a junção das tabelas 'escolas' e 'educandos').
 
 ## Resultados
 
-Os dados foram preparados e salvos em um banco SQLite, prontos para análises de dados.
+Os dados foram preparados e salvos em um [banco de dados SQLite](sqlite_db), prontos para análises de dados.
 
 ## Sugestões de Análises
 
